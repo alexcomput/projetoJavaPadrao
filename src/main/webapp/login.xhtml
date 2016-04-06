@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:stella="http://stella.caelum.com.br/faces2">
+
+    <ui:composition template="/template/index.xhtml">
+        <!--Substituir o Título padrão da Página-->
+        <ui:define name="titulo">
+            Login
+        </ui:define>
+        <ui:define name="menus">
+        </ui:define>
+        <ui:define name="perfil">
+        </ui:define>
+        <ui:define name="blocos">
+        </ui:define>
+        <ui:define name="conteudo">
+            <h:form prependId="false" id="form1">
+                <p:growl id="login_messages" />
+                <p:panel id="welcome"> 
+                    <p:panelGrid columns="1">
+                        <p:outputLabel value="CPF" for="userCpf" />
+                        <p:inputMask id="userCpf" mask="999.999.999-99" value="#{loginController.userCpf}" size="22" maxlength="15" required="true" requiredMessage="Digite o CPF" />
+                        <p:outputLabel value="Senha" for="password" />
+                        <h:inputSecret id="password" required="true" maxlength="8" value="#{loginController.password}" requiredMessage="Digite a Senha" />
+                        <p:commandButton   update="form1"  value="Entrar" action="#{loginController.logar()}"  class="icone2 chave"/>
+                        <p:separator/>
+                        <p:link href="http://www.secad.to.gov.br/map/primeiroacesso.jsp" target="_blank" value="Primeiro acesso?" title="Muganda 2016!"/>
+                        <p:separator/>
+                        <p:link href="http://www.secad.to.gov.br/map/esqueceusenha.jsp" target="_blank" value="Esqueceu a Senha?"/>
+                    </p:panelGrid>   
+                </p:panel> 
+            </h:form>
+        </ui:define>
+        <ui:define name="recursos">
+        </ui:define>
+    </ui:composition>
+</html>

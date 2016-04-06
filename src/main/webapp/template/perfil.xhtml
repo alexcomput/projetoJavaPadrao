@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <ui:composition>
+        <h:form id="usuario_form">
+            <p:panel id="pnlPerfil" class="perfil">
+                <div class="avatar"></div>
+                <ul>
+                    <li class="usuario"><h:outputText value="#{loginController.servidor.nome}" /></li>
+                    <li class="cpf"><h:outputText value="#{loginController.cpfFormatado}" /></li>
+                    <li class="cpf"><h:outputText value="#{loginController.servidor.orgaoFantasia}" /></li> 
+                    <li class="funcao">#{loginController.permissaoAtual.perfil.descricao }</li>
+                    <li class="orgaoaAcesso"><h:outputText  id="orgaoPer" value="#{loginController.orgaoPerfilAcesso}" /></li>
+                    <li class="orgao"><h:outputText value="#{loginController.permissaoAtual.lotadoOrgao}" /></li> 
+                    <li class="sair"><h:commandLink value="Sair" immediate="true" rendered="#{loginController.autenticado}" action="#{loginController.logout()}" /></li>
+                </ul>
+            </p:panel> 
+        </h:form>
+    </ui:composition>
+</html>

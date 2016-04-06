@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core" >
+    <ui:composition template="/template/index.xhtml"> 
+        <ui:define name="meta">
+            <f:metadata>
+                <f:viewAction action="#{usuarioController.init()}" />  
+            </f:metadata>
+        </ui:define>
+        <ui:define name="cabecalho"> 
+        </ui:define>
+        <ui:define name="menus"> 
+        </ui:define> 
+        <ui:define name="blocos"> 
+        </ui:define>
+        <ui:define name="conteudo">
+            <p:panel header="Consulta de Fatores " id="painel1">  
+
+                <h:form id="form1"   > 
+                    <p:growl id="msg_form1"/> 
+                    <p:dataTable  id="TBUsuario"  var="usuario"  widgetVar="dataTable"
+                                  rowsPerPageTemplate="10,15,20"
+                                  emptyMessage="Nenhum registro encontrado."                                      
+                                  currentPageReportTemplate="Mostrando {startRecord}-{endRecord} de {totalRecords}"
+                                  paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"                                  
+                                  lazy="true"
+                                  paginator="true"
+                                  paginatorAlwaysVisible="false"
+                                  rows="10" 
+
+                                  value="#{usuarioController.list}"    
+                                  rowKey="#{usuario.id}"  >
+
+                        <f:facet name="header">
+                            Lista de Servidores
+                        </f:facet>             
+                        <p:column  sortBy="#{usuario.id}"  headerText="Código">
+                            <h:outputText value="#{usuario.id}" />
+                        </p:column>
+                        <p:column  filterBy="#{usuario.username}" sortBy="#{usuario.username}"  headerText="CPF">
+                            <h:outputText value="#{usuario.username}" />
+                        </p:column>
+
+                        <p:column filterBy="#{usuario.email}" sortBy="#{usuario.email}" headerText="Email"> 
+                            <h:outputText value="#{usuario.email}" /> 
+                        </p:column>  
+                        <p:column id="conlunaSelec"  width="30">
+                            <p:commandButton icon="ui-icon-check" title="Selecionar"
+                                             action="#{usuarioController.selecionardoUsuario(usuario)}"
+                                             process="@this" />
+                        </p:column>
+                    </p:dataTable> 
+
+                    <p:blockUI block="TBUsuario" trigger="TBUsuario" >
+                        LOADING<br />
+                        <p:graphicImage value="/resources/images/loading.gif"/>
+                    </p:blockUI>
+
+                </h:form> 
+            </p:panel>
+
+        </ui:define>
+    </ui:composition>
+</html>

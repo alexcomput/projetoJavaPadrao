@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+<ui:composition template="/template/index.xhtml">
+    <f:metadata>
+        <f:viewAction action="#{perfilController.init()}" />
+    </f:metadata>
+    <!--Substituir o Título padrão da Página-->
+    <ui:define name="titulo">
+        Cadastro de Perfil
+    </ui:define>
+    <!--Conteúdo da página-->
+    <ui:define name="conteudo">
+        <p:commandButton action="/admin/cadastro/privusuario/index?faces-redirect=true" value="Listar" class="icone2 listar"/>
+        <p:commandButton action="/admin/cadastro/perfil/index?faces-redirect=true" value="Perfil" class="icone2 user-doc selecionado" />
+        <p:commandButton action="/admin/cadastro/privusuario/perfilusuarioAdd.xhtml?faces-redirect=true" value="Privilégio" class="icone2 chave" />
+        <p:commandButton action="/admin/cadastro/menu/index?faces-redirect=true" value="Menu" class="icone2 menu" />
+        <p:commandButton action="/admin/cadastro/privilegio/index?faces-redirect=true" value="Acesso" class="icone2 cadeado" />
+        <p:separator/>
+        <p:panel id="perfil_pnl" header="Usuários">
+            <p:growl id="fator_messages"  />
+            <!--form com o objetivo de adicionar instâncias na listaPreviaGrupo (verificar adicionarListaPrevia() em GrupoFatorController)-->
+            <h:form id="form1">
+                <!--componente com o objetivo de organizar visualmente a página-->
+                <!--componente com o objetivo de mostrar as mensagens de retorno para esse formulário-->
+                <p:growl id="perfil_messages" />
+                <!--inicio da tabela de inputs do cadastro. Esse elemento só será exibido se o atributo controlador2 estiver com
+               valor igual a true-->
+                <p:outputLabel for="descricao" value="Descrição:  " />
+                <p:inputTextarea id="descricao" placeholder="Descrição do perfil" value="#{perfilController.perfil.descricao}" required="true" requiredMessage="Digite a descrição para o Perfil"/>
+                <!--Através deste elemento é possível adicionar a instancia atual na listaPrevia.-->
+                <p:commandButton actionListener="#{perfilController.salvar()}" value="Salvar" update=":form2 :form1 " ajax="true" class="icone2 salvar">
+                    <p:confirm header="Confirmação" message="Deseja realmente salvar registro?" />
+                </p:commandButton>
+                <p:separator/>
+            </h:form>
+            <!--Esse form é para isolar a operação de edição. Este componente só será renderizado se a listaPreviaGrupo tiver ao menos um elemento-->
+            <h:form id="form2" >
+                <!--Componente que recebe as mensagens de retorno deste form.-->
+                <p:growl id="msg_form2"/>
+                <!--Componente que apresenta os dados referentes aos elementos da listaPreviaGrupo-->
+                <p:dataTable id="perfil_dataTable" var="perfil" value="#{perfilController.listaPerfil}"
+                             paginatorAlwaysVisible="false"
+                             editable="true">
+                    <p:ajax event="rowEdit" listener="#{perfilController.onEdit}" update=":form2:perfil_dataTable" />
+
+                    <p:column headerText="Código">
+                        <h:outputText value="#{perfil.id}" />
+                    </p:column>
+                    <p:column headerText="Descrição">
+                        <p:cellEditor>
+                            <f:facet name="output">
+                                <h:outputText value="#{perfil.descricao}" />
+                            </f:facet>
+                            <f:facet name="input">
+                                <p:inputText value="#{perfil.descricao}" />
+                            </f:facet>
+                        </p:cellEditor>
+                    </p:column>
+                    <p:column id="testeColumn"  headerText="Ação" width="40">
+                        <p:rowEditor id="editorLinha" />
+                        <p:commandButton  icon="" actionListener="#{perfilController.remover(perfil)}" title="Excluir" update=":form2" ajax="true" class="iconebt lixeira">
+                            <p:confirm header="Confirmação" message="Deseja realmente deletar o perfil?" />
+                        </p:commandButton>
+                        <p:commandButton title="Permissão" value=""
+                                         action="#{perfilController.atribuirPermissao(perfil.id)}"
+                                         ajax="false" class="iconebt cadeado">
+                        </p:commandButton>
+                    </p:column>
+                </p:dataTable>
+            </h:form>
+        </p:panel>
+        <p:confirmDialog global="true" showEffect="fade" >
+            <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+            <p:commandButton value="Não" ignoreAutoUpdate="true" type="button" styleClass="ui-confirmdialog-no"   />
+        </p:confirmDialog>
+    </ui:define>
+</ui:composition>
+</html>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui" > 
+    <ui:composition>
+        <div class="acesso">
+            <div class="caixa">
+                <p:dataList var="menuM" value="#{menuController.menuModulo(loginController.menusAcesso, 1, 1)}"> 
+                    <div class="secao">
+                        <h1>#{menuM.descricao}</h1>
+                        <p:dataList var="menuSu" value="#{menuController.menuModulo(loginController.menusAcesso, 2, menuM.id)}">
+                            <div class="secao">
+                                <h2>#{menuSu.descricao}</h2>
+                                <p:dataList var="menuSe" value="#{menuController.menuModulo(loginController.menusAcesso, 3, menuSu.id)}">
+                                    <a href="/aede/#{menuM.url}/#{menuSu.url}/#{menuSe.url}" title="#{menuSe.obs}">
+                                        <div class="box">
+                                            <div class="icone #{menuSe.icone}"></div>
+                                            <div class="descricao">
+                                                <h2>#{menuSe.descricao}</h2>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </p:dataList>
+                            </div>
+                        </p:dataList>
+                    </div>
+                </p:dataList>
+            </div>
+        </div>
+    </ui:composition>
+</html>

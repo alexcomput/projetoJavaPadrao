@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Scene Scope="Project" version="2">
+    <Scope Scope="Faces Configuration Only"/>
+    <Scope Scope="Project">
+        <Node id="404.xhtml" x="900" y="300" zoom="true"/>
+        <Node id="relatorios/avaliacao.xhtml" x="650" y="450" zoom="true"/>
+        <Node id="template/rodape.xhtml" x="650" y="300" zoom="true"/>
+        <Node id="index.xhtml" x="150" y="600" zoom="true"/>
+        <Node id="relatorios/formulario.xhtml" x="900" y="450" zoom="true"/>
+        <Node id="registrar/quadroGeral.xhtml" x="1150" y="300" zoom="true"/>
+        <Node id="registrar/amostra.xhtml" x="150" y="750" zoom="true"/>
+        <Node id="template/conteudo.xhtml" x="379" y="127" zoom="true"/>
+        <Node id="template/index.xhtml" x="400" y="450" zoom="true"/>
+        <Node id="template/cabecalho.xhtml" x="150" y="300" zoom="true"/>
+        <Node id="registrar/grupoFator.xhtml" x="373" y="269" zoom="true"/>
+        <Node id="sessaoExpirada.xhtml" x="793" y="89" zoom="true"/>
+        <Node id="registrar/formulario.xhtml" x="400" y="600" zoom="true"/>
+        <Node id="registrar/fator.xhtml" x="900" y="150" zoom="true"/>
+        <Node id="semPermissao.xhtml" x="400" y="300" zoom="true"/>
+        <Node id="login.xhtml" x="150" y="150" zoom="true"/>
+        <Node id="template/direita.xhtml" x="150" y="450" zoom="true"/>
+        <Node id="vincular/formulario.xhtml" x="645" y="183" zoom="true"/>
+        <Node id="template/menu.xhtml" x="650" y="150" zoom="true"/>
+        <Node id="testes/404.xhtml" x="400" y="150" zoom="true"/>
+        <Node id="template/esquerda.xhtml" x="1150" y="150" zoom="true"/>
+        <Node id="relatorios/servidor.xhtml" x="1400" y="150" zoom="true"/>
+    </Scope>
+    <Scope Scope="All Faces Configurations"/>
+</Scene>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.0" xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
+  <persistence-unit name="aedePU" transaction-type="RESOURCE_LOCAL">
+    <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+    <class>br.gov.to.secad.aede.domain.Log</class>
+    <class>br.gov.to.secad.aede.domain.Usuario</class>
+    <class>br.gov.to.secad.aede.domain.Perfil</class>
+    <class>br.gov.to.secad.aede.domain.Menu</class>
+    <class>br.gov.to.secad.aede.domain.MenuUsuario</class>
+    <class>br.gov.to.secad.aede.domain.Orgao</class>
+    <class>br.gov.to.secad.aede.domain.PerfilUsuarioOrgao</class>
+    <class>br.gov.to.secad.aede.domain.PerfilUsuario</class>
+    <exclude-unlisted-classes>false</exclude-unlisted-classes>
+    <properties>
+      <property name="eclipselink.weaving" value="false"/>
+      <property name="eclipselink.cache.shared.default" value="false"/>
+      <property name="eclipselink.logging.level" value="FINE"/>
+    </properties>
+  </persistence-unit>
+  <persistence-unit name="ergonPU" transaction-type="RESOURCE_LOCAL">
+    <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+    <class>br.gov.to.secad.ergon.domain.Servidor</class>
+    <exclude-unlisted-classes>false</exclude-unlisted-classes>
+    <properties>
+      <property name="eclipselink.weaving" value="false"/>
+      <property name="eclipselink.weaving.lazy" value="true"/>
+      <property name="eclipselink.cache.shared.default" value="false"/>
+      <property name="eclipselink.logging.level" value="FINE"/>
+      <property name="eclipselink.session-event-listener" value="br.gov.to.secad.ergon.ErgonSessionEventListener"/>
+    </properties>
+  </persistence-unit>
+</persistence>

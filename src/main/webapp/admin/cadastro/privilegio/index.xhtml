@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <ui:composition template="/template/index.xhtml">
+        <f:metadata>
+            <f:viewAction action="#{perfilController.init()}"/> 
+            <f:viewAction action="#{menuUsuarioController.carregaPermissoesPerfil()}"/>
+            <f:viewParam name="idPerfilSelecionado" value="#{menuUsuarioController.idPerfilSelecionado}"/>
+        </f:metadata>
+        <!--Substituir o Título padrão da Página-->
+        <ui:define name="titulo">
+            Cadastro de Privilégio para usuário
+        </ui:define>
+        <!--Conteúdo da página-->
+        <ui:define name="conteudo">
+            <p:commandButton action="/admin/cadastro/privusuario/index?faces-redirect=true" value="Listar" class="icone2 listar"/>
+            <p:commandButton action="/admin/cadastro/perfil/index?faces-redirect=true" value="Perfil" class="icone2 user-doc" />
+            <p:commandButton action="/admin/cadastro/privusuario/perfilusuarioAdd.xhtml?faces-redirect=true" value="Privilégio" class="icone2 chave" />
+            <p:commandButton action="/admin/cadastro/menu/index?faces-redirect=true" value="Menu" class="icone2 menu" />
+            <p:commandButton action="/admin/cadastro/privilegio/index?faces-redirect=true" value="Acesso" class="icone2 cadeado selecionado" />
+            <p:separator/>
+                <p:panel id="menu_pnl" header="Usuários">
+                <h:form id="form1">
+                    <p:growl id="msg_fomr1"/>
+                    <p:panelGrid    columns="2" id="menu1_quadro_grid" >
+                        <p:outputLabel for="menupai" title="quadro" value="Perfil:   "/>
+                        <p:selectOneMenu required="true" id="menupai" filter="true" filterMatchMode="contains" value="#{menuUsuarioController.idPerfilSelecionado}">
+                            <f:selectItem itemValue="#{null}" noSelectionOption="true" itemLabel="Selecione um quadro..."/>
+                            <f:selectItems  value="#{perfilController.listaPerfil}" var="perfil" itemLabel="#{perfil.descricao}" itemValue="#{perfil.id}" />
+                            <p:ajax event="change"  listener="#{menuUsuarioController.carregaPermissoesPerfil()}"
+                                    update="arvorePermissaoMenu"/>
+                        </p:selectOneMenu>
+                    </p:panelGrid>
+                    <p:separator/>
+                    <!--Monta a árvore de permissões do perfil selecionado-->
+                    <h:outputText value="Painel de Permissões do Perfil"/>
+                    <p:tree id="arvorePermissaoMenu" value="#{menuUsuarioController.root}" selectionMode="checkbox" var="doc"
+                            selection="#{menuUsuarioController.nosSelecionados}" propagateSelectionUp="false" propagateSelectionDown="true">
+                        <p:treeNode>
+                            <h:outputText value="#{doc.descricao}"/>
+                        </p:treeNode>
+                    </p:tree>
+                    <p:separator/>
+                    <p:commandButton update="form1" value="Salvar" actionListener="#{menuUsuarioController.salvarPrivilegio()}" class="icone2 salvar" >
+                        <p:confirm header="Confirmação" message="Deseja realmente salvar?"  icon="ui-icon-alert"   />
+                    </p:commandButton>
+                </h:form>
+                <p:confirmDialog global="true" showEffect="fade" >
+                    <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                    <p:commandButton  value="Não" ignoreAutoUpdate="true" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                </p:confirmDialog>
+            </p:panel>
+        </ui:define>
+    </ui:composition>
+</html>

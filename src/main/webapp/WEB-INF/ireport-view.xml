@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans 
+http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+
+    <!--Informações para geração de relatório JASPERREPORTS-->
+    <bean id="avaliacao"
+          class="org.springframework.web.servlet.view.jasperreports.JasperReportsPdfView">
+          <property name="url" value="file:src/main/webapp/appfiles/report/avaliacao.jrxml" />
+          <property name="reportDataKey" value="datasource" />
+    </bean>
+</beans>

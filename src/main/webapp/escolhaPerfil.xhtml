@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <ui:composition template="/template/index.xhtml">
+
+        <!--Substituir o Título padrão da Página-->
+
+        <ui:define name="titulo">
+            Escolha de Perfil
+        </ui:define>
+        <ui:define name="menus">
+        </ui:define>
+        <ui:define name="perfil">
+        </ui:define>
+        <ui:define name="blocos">
+        </ui:define>
+        <ui:define name="conteudo">
+            <h:form id="form1">
+                <p:panel id="pnl">
+                    <p:growl id="messages" />
+                    <f:facet  name="header"> 
+                        <h:outputText value="Escolha de Perfil "/>
+                    </f:facet>
+                    <p:panelGrid    columns="2" class="lista" id="grid1" >                        
+                        <p:outputLabel for="perfil" title="perfil" value="Perfil:"/>                                                                                 
+                        <p:selectOneMenu id="perfil" value="#{loginController.idPermissaoAtual}" filter="true" filterMatchMode="contains" required="true" requiredMessage="Por favor, selecione um perfil.">
+                            <f:selectItem  itemValue="" noSelectionOption="true" itemLabel="Selecione um perfil..."/>
+                            <f:selectItems   value="#{loginController.listaPermissao}" var="permissao" itemLabel="#{permissao.perfil.descricao} - #{permissao.lotadoOrgao}" itemValue="#{permissao.id}"/>
+                            <p:ajax update="perfilusuarioorgao" listener="#{loginController.buscarPerfilUsuarioOrgaoPermissaoId()}" process="perfil"  /> 
+                        </p:selectOneMenu>                                         
+                        <p:outputLabel for="perfilusuarioorgao" title="Orgao" value="Órgão:"/>                                                                                 
+                        <p:selectOneMenu value="#{loginController.perfilUsuarioOrgaoId}" id="perfilusuarioorgao" filter="true" filterMatchMode="contains" required="true" requiredMessage="Por favor, selecione um orgao.">
+                            <f:selectItem  itemValue="" noSelectionOption="true" itemLabel="Selecione um Órgão..."/>
+                            <f:selectItems value="#{loginController.listaPerfilUsuarioOrgaos}" var="perfilUsOrgaop" itemLabel="#{perfilUsOrgaop.orgao}" itemValue="#{perfilUsOrgaop.id}"/>
+                        </p:selectOneMenu>
+                        <p:commandButton update="form1" action="#{loginController.escolhePerfil()}" value="Avançar" class="icone2 chave" />
+                    </p:panelGrid>
+                </p:panel> 
+            </h:form>
+        </ui:define>
+        <ui:define name="recursos">
+        </ui:define>
+    </ui:composition>
+</html>

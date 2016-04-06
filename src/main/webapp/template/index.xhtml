@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      lang="pt-br"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <!-- Enables CTRL+SHIFT+D for activating Facelets debug window -->
+        <ui:debug hotkey="x" />
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="description" content="Avaliação de Desempenho, Secad-TO, Governo do Tocantins"/>
+        <meta name="keywords" content="Avaliação, Desempenho, Secad, Administração, Tocantins, Governo do Tocantins"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2.0"/>
+        <title>
+            <ui:insert name="tituloDaPagina">SAEDE - Sistema de Avaliação Especial de Desempenho do Estágio Probatório</ui:insert> - <ui:insert name="sistema"></ui:insert>
+        </title>
+        <link rel="icon" href="#{resource['images/logo.png']}"/>
+        <link rel="author" href="http://www.secad.to.gov.br/prog" title="Secad"/>
+        <link rel="pingback" href="http://www.secad.to.gov.br/prog"/>
+        <link rel="search" href="http://www.secad.to.gov.br/prog/?s="/>
+        <f:facet name="last">
+            <h:outputStylesheet name="aede.min.css" library="css" />
+            <h:outputStylesheet name="style.min.css" library="css" />
+            <h:outputStylesheet name="bloco.min.css" library="css" />
+        </f:facet>
+        <h:outputScript name="primefaces-locales.js" library="js" />
+    </h:head>
+    <h:body>
+        <ui:insert name="cabecalho" >
+            <ui:include src="cabecalho.xhtml"/>
+        </ui:insert>
+        <ui:insert name="menu">
+        </ui:insert>
+        <ui:insert name="blocos" >              
+            <ui:include src="blocos.xhtml" />
+        </ui:insert>
+        <main>
+            <ui:insert name="conteudo">
+                <ui:include src="conteudo.xhtml"/>
+            </ui:insert>
+            <ui:insert name="recursos">
+                <ui:include src="recursos.xhtml"/>
+            </ui:insert>
+        </main>
+        <ui:insert name="rodape">
+            <ui:include src="rodape.xhtml"/>
+        </ui:insert>
+    </h:body>
+</html>

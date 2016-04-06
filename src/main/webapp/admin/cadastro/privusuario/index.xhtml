@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <ui:composition template="/template/index.xhtml">
+        <f:metadata>
+            <f:viewAction action="#{perfilController.init()}"/>   
+        </f:metadata>
+        <!--Substituir o Título padrão da Página-->
+        <ui:define name="titulo">
+            Lista de Usuários do Sistema
+        </ui:define>
+        <!--Conteúdo da página-->
+        <ui:define name="conteudo">
+            <p:commandButton action="/admin/cadastro/privusuario/index?faces-redirect=true" value="Listar" class="icone2 listar selecionado"/>
+            <p:commandButton action="/admin/cadastro/perfil/index?faces-redirect=true" value="Perfil" class="icone2 user-doc" />
+            <p:commandButton action="/admin/cadastro/privusuario/perfilusuarioAdd.xhtml?faces-redirect=true" value="Privilégio" class="icone2 chave" />
+            <p:commandButton action="/admin/cadastro/menu/index?faces-redirect=true" value="Menu" class="icone2 menu" />
+            <p:commandButton action="/admin/cadastro/privilegio/index?faces-redirect=true" value="Acesso" class="icone2 cadeado" />
+            <p:separator/>
+            <p:panel header="Usuarios" id="pn1">
+                <h:form>
+                    <p:dataTable value="#{permissaoUsuarioController.list}" lazy="true" 
+                                 var="perfilusuario"  widgetVar="dataTable"
+                                 rowsPerPageTemplate="10,15,20"
+                                 emptyMessage="Nenhum registro encontrado."                                      
+                                 currentPageReportTemplate="Mostrando {startRecord}-{endRecord} de {totalRecords}"
+                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"                                  
+                                 paginator="true"
+                                 paginatorAlwaysVisible="false"
+                                 rows="10"                                                                             
+                                 rowKey="#{perfilusuario.id}"  > 
+                        <p:column  sortBy="#{perfilusuario.nomeServidor}"  headerText="Nome">
+                            <h:outputText value="#{perfilusuario.nomeServidor}" />
+                        </p:column>
+                        <p:column  filterBy="#{perfilusuario.usuario.cpf}" sortBy="#{perfilusuario.usuario.cpf}"  headerText="CPF">
+                            <h:outputText value="#{perfilusuario.usuario.cpf}"/>
+                        </p:column>
+                        <p:column  filterBy="#{perfilusuario.lotadoOrgao}" sortBy="#{perfilusuario.lotadoOrgao}"  headerText="Lotação servidor">
+                            <h:outputText value="#{perfilusuario.lotadoOrgao}" />
+                        </p:column>
+                        <p:column  filterBy="#{perfilusuario.perfil.descricao}" sortBy="#{perfilusuario.perfil.descricao}"  headerText="Perfil">
+                            <h:outputText value="#{perfilusuario.perfil.descricao}" />
+                        </p:column> 
+                    </p:dataTable>
+                </h:form> 
+            </p:panel>
+        </ui:define>
+    </ui:composition>
+</html>

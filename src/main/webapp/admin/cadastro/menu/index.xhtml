@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core" >
+
+    <ui:composition template="/template/index.xhtml">
+        <f:metadata>
+            <f:viewAction  action="#{menuController.init()}"/>
+            <f:viewAction action="#{menuController.carregarMenuSelectIte(1)}"/>
+        </f:metadata>
+        <!--Substituir o Título padrão da Página-->
+        <ui:define name="titulo">
+            Cadastro de Menu
+        </ui:define>
+        <!--Conteúdo da página-->
+        <ui:define name="conteudo">
+            <p:commandButton action="/admin/cadastro/privusuario/index?faces-redirect=true" value="Listar" class="icone2 listar"/>
+            <p:commandButton action="/admin/cadastro/perfil/index?faces-redirect=true" value="Perfil" class="icone2 user-doc" />
+            <p:commandButton action="/admin/cadastro/privusuario/perfilusuarioAdd.xhtml?faces-redirect=true" value="Privilégio" class="icone2 chave" />
+            <p:commandButton action="/admin/cadastro/menu/index?faces-redirect=true" value="Menu" class="icone2 menu selecionado" />
+            <p:commandButton action="/admin/cadastro/privilegio/index?faces-redirect=true" value="Acesso" class="icone2 cadeado" />
+            <p:separator/>
+            <p:panel header="Cadastro de Menu" id="pn1">
+                <h:form id="form1" prependId="false"  >
+                    <p:messages/>
+                    <p:panelGrid    columns="2" id="menu1_quadro_grid" >                        
+                        <p:outputLabel for="menupai" title="quadro" value="Nível 1: Modulo"/>                                 
+                        <p:selectOneMenu id="menupai" filter="true" filterMatchMode="contains" value="#{menuController.idmenuPai1}">
+                            <f:selectItem  itemValue="#{null}" noSelectionOption="true" itemLabel="Selecione um quadro..."/>
+                            <f:selectItems value="#{menuController.listaMenusNivel1}" var="menuNivel1" itemLabel="#{menuNivel1.descricao}" itemValue="#{menuNivel1.id}"/>
+                            <p:ajax update="form1 :pn1 menu1_quadro_grid" process="@this"  listener="#{menuController.visualizar(1)}"  />
+                        </p:selectOneMenu>                                         
+                        <p:outputLabel for="menupai2" title="Nivel" value="Nivel 2: Serviço" />                                 
+                        <p:selectOneMenu id="menupai2" filter="true" filterMatchMode="contains" value="#{menuController.idmenuPai2}">
+                            <f:selectItem  itemValue="#{null}" noSelectionOption="true" itemLabel="Selecione um quadro..."/>
+                            <f:selectItems value="#{menuController.listaMenusNivel2}" var="menuNivel2" itemLabel="#{menuNivel2.descricao}" itemValue="#{menuNivel2.id}"/>
+                            <p:ajax update="form1 :pn1 menu1_quadro_grid"  process="@this" listener="#{menuController.visualizar(2)}" />
+                        </p:selectOneMenu>                                         
+                        <p:outputLabel  for="menupai3" title="quadro" value="Nível 3: Sub-Serviço"/>                                 
+                        <p:selectOneMenu disabled="true" id="menupai3" filter="true" filterMatchMode="contains" value="#{menuController.idmenuPai3}">
+                            <f:selectItem  itemValue="" noSelectionOption="true" itemLabel="Selecione um quadro..."/>
+                            <f:selectItems value="#{menuController.listaMenusNivel3}" var="menuNivel3" itemLabel="#{menuNivel3.descricao}" itemValue="#{menuNivel3.id}"/>
+                        </p:selectOneMenu>                                         
+                        <p:outputLabel for="descricao" title="Descrição" value="Descrição:"/>    
+                        <p:inputText id="descricao"  placeholder="Digite aqui " value="#{menuController.menu.descricao}" required="true"/>                            
+                        <p:outputLabel for="obs" title="Descrição" value="Observação:"/>
+                    </p:panelGrid>
+                    <p:inputTextarea id="obs"  value="#{menuController.menu.obs}" required="true" placeholder="Digite aqui Observação"/>
+                    <p:panelGrid columns="2" >
+                        <p:outputLabel for="icone" title="icone" value="Icone:"/>    
+                        <p:inputText id="icone"  value="#{menuController.menu.icone}"  required="true" placeholder="Icone"/>                            
+
+                        <p:outputLabel for="url" title="Pasta" value="Pasta:" />    
+                        <p:inputText id="url"  value="#{menuController.menu.url}"   required="true" placeholder="URL"/>                            
+
+                        <p:outputLabel for="ordem" title="ordem" value="Ordem:"/>    
+                        <p:inputText  id="ordem" value="#{menuController.menu.ordem}" required="true" maxlength="2" placeholder="Ordem"/>
+                    </p:panelGrid>
+                    <p:commandButton  actionListener="#{menuController.salvarMenu()}" value="Salvar" ajax="true" update="form1 :form2" class="icone2 salvar" >
+                        <p:confirm header="Confirmação" message="Deseja realmente salvar?"  icon=""  />
+                    </p:commandButton>   
+                </h:form>
+                <p:separator />
+
+                <h:form id="form2" >
+                    <!--Componente que recebe as mensagens de retorno deste form.-->
+                    <p:dataTable id="lista_menu_dtb" var="menuAlte" 
+                                 value="#{menuController.listaMenus}"   
+                                 rows="100"
+                                 paginator="true"
+                                 paginatorAlwaysVisible="false"
+                                 editable="true"
+                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" >
+                        <p:ajax event="rowEdit" listener="#{menuController.onEdit}" update="lista_menu_dtb"  />  
+                        <p:column headerText="Código"    >
+                            #{menuAlte.id}
+                        </p:column>
+                        <p:column headerText="Descrição" >
+
+                            <p:cellEditor>
+                                <f:facet name="output">
+                                    <h:outputText value="#{menuAlte.descricao}" />
+                                </f:facet>
+                                <f:facet name="input">
+                                    <p:inputText value="#{menuAlte.descricao}" />
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
+                        <p:column headerText="Ordem" >
+                            <p:cellEditor>
+                                <f:facet name="output">
+                                    <h:outputText value="#{menuAlte.ordem}" />
+                                </f:facet>
+                                <f:facet name="input">
+                                    <p:inputText value="#{menuAlte.ordem}" />
+                                </f:facet>
+                            </p:cellEditor> 
+                        </p:column>
+                        <p:column headerText="Icone" >
+                            <p:cellEditor>
+                                <f:facet name="output">
+                                    <h:outputText value="#{menuAlte.icone}" />
+                                </f:facet>
+                                <f:facet name="input">
+                                    <p:inputText value="#{menuAlte.icone}" />
+                                </f:facet>
+                            </p:cellEditor>                            
+                        </p:column>
+                        <p:column headerText="Link" >
+
+                            <p:cellEditor>
+                                <f:facet name="output">
+                                    <h:outputText value="#{menuAlte.url}" />
+                                </f:facet>
+                                <f:facet name="input">
+                                    <p:inputText value="#{menuAlte.url}" />
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
+                        <p:column headerText="Pai" >
+                            #{menuAlte.menuPai.descricao}
+                        </p:column>
+                        <p:column headerText="Ativo">
+                            <p:cellEditor>
+                                <f:facet name="output">
+                                    <h:outputText value="Sim"  rendered="#{menuController.ativodoConfere(menuAlte.ativo)}" />
+                                    <h:outputText value="Não"  rendered="#{not menuController.ativodoConfere(menuAlte.ativo)}" />
+                                </f:facet>
+                                <f:facet name="input">
+                                    <p:selectOneMenu value="#{menuAlte.ativo}" filter="true" filterMatchMode="contains" >
+                                        <f:selectItem itemValue="S" itemLabel="Sim" />
+                                        <f:selectItem itemValue="N" itemLabel="Não"/>
+                                    </p:selectOneMenu>
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
+                        <p:column  headerText="Editar">
+                            <!--Componente que ao ser clicado permite a edição da linha a qual pertença. Este componente usa os métodos onEdit e
+                            onCancel-->
+                            <p:rowEditor id="editorLinha"  />
+                            <!--Componente que permite quando clicado a excluir a linha a qual pertença.--> 
+                        </p:column >
+                        <p:column  headerText="Excluir">
+                            <p:commandButton icon="" actionListener="#{menuController.removeMenu(menuAlte)}" update="lista_menu_dtb" class="iconebt excluir" >
+                                <p:confirm header="Confirmação" message="Deseja realmente excluir registro?" />   
+                            </p:commandButton>
+                        </p:column> 
+                    </p:dataTable>
+                </h:form>  
+                <p:confirmDialog global="true" showEffect="fade" >
+                    <p:commandButton value="Sim" type="button"  styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                    <p:commandButton value="Não" ignoreAutoUpdate="true" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                </p:confirmDialog>
+            </p:panel>
+        </ui:define>
+    </ui:composition>
+</html>

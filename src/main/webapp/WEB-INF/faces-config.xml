@@ -1,0 +1,106 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<!-- =========== FULL CONFIGURATION FILE ================================== -->
+<faces-config version="2.2"
+              xmlns="http://java.sun.com/xml/ns/javaee"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_2.xsd">
+ 
+    <application>
+        <el-resolver>org.springframework.web.jsf.el.SpringBeanFacesELResolver</el-resolver>
+        <!-- Para abrir o Jdialog pelo Bean inicio-->
+        <action-listener>org.primefaces.application.DialogActionListener</action-listener>
+        <navigation-handler>org.primefaces.application.DialogNavigationHandler</navigation-handler>
+        <view-handler>org.primefaces.application.DialogViewHandler</view-handler>
+        <!-- Fim jdialog-->
+        <message-bundle>
+            br.gov.to.secad.aede.resources.Messages
+        </message-bundle>
+    </application>
+    <!-- Implementação para entender melhor o Ciclo de Vida do JSF -->
+    <lifecycle>
+        <phase-listener>
+            br.gov.to.secad.aede.util.LogPhaseListener
+        </phase-listener>
+    </lifecycle>
+    <navigation-rule>
+        <from-view-id>*</from-view-id>
+        <navigation-case>
+            <from-outcome>relatorioAvaliacao</from-outcome>
+            <to-view-id>/relatorios/avaliacao.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>sucessoLogin</from-outcome>
+            <to-view-id>/index.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>sair</from-outcome>
+            <to-view-id>/login.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <from-view-id>/login.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>escolhePerfil</from-outcome>
+            <to-view-id>/escolhaPerfil.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>falhaLogin</from-outcome>
+            <to-view-id>/login.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <from-view-id>/index.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>sair</from-outcome>
+            <to-view-id>/login.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <from-view-id>/registrar/grupoFator.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>sair</from-outcome>
+            <to-view-id>/login.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <from-view-id>/registrar/fator.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>sair</from-outcome>
+            <to-view-id>/login.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <from-view-id>/vincular/formulario.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>sair</from-outcome>
+            <to-view-id>/login.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <from-view-id>/template/blocos.xhtml</from-view-id>
+        <from-view-id>/template/menu.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>registraGrupoFator</from-outcome>
+            <to-view-id>/registrar/grupoFator.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>registraFator</from-outcome>
+            <to-view-id>/registrar/fator.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>registraFormulario</from-outcome>
+            <to-view-id>/registrar/formulario.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>sair</from-outcome>
+            <to-view-id>/login.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>relatorioAvaliacao</from-outcome>
+            <to-view-id>/relatorios/avaliacao.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+</faces-config>

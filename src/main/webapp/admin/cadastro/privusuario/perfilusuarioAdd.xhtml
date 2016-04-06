@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <ui:composition template="/template/index.xhtml">
+        <f:metadata>
+            <f:viewAction action="#{perfilController.init()}"/>   
+        </f:metadata>
+        <!--Substituir o Título padrão da Página-->
+        <ui:define name="titulo">
+            Cadastro de Privilégio para usuário
+        </ui:define>
+        <!--Conteúdo da página-->
+        <ui:define name="conteudo">
+            <p:commandButton action="/admin/cadastro/privusuario/index?faces-redirect=true" value="Listar" class="icone2 listar"/>
+            <p:commandButton action="/admin/cadastro/perfil/index?faces-redirect=true" value="Perfil" class="icone2 user-doc" />
+            <p:commandButton action="/admin/cadastro/privusuario/perfilusuarioAdd.xhtml?faces-redirect=true" value="Privilégio" class="icone2 chave selecionado" />
+            <p:commandButton action="/admin/cadastro/menu/index?faces-redirect=true" value="Menu" class="icone2 menu" />
+            <p:commandButton action="/admin/cadastro/privilegio/index?faces-redirect=true" value="Acesso" class="icone2 cadeado" />
+            <p:separator/>
+            <p:panel header="Usuários" id="pnl">
+                <h:form id="form1">
+                    <p:panelGrid    columns="5" id="grid2" >                              
+                        <p:outputLabel for="nunF" title="Numero Func" value="N° Func / N° Vinculo:"/>                                 
+                        <p:inputText id="nunF" value="#{permissaoUsuarioController.nunFunc}"/>                            
+                        <h:outputText title="Numero Vinculo" value="&nbsp;&nbsp;&nbsp;-"/>
+                        <p:inputText size="1" maxlength="1" id="nunV" value="#{permissaoUsuarioController.nunVinc}"/>    
+                        <p:commandButton     icon="" title="Importar usuário!" actionListener="#{permissaoUsuarioController.carregarServidor()}"  
+                                             process="form1" update=":form2" class="iconebt pesquisar" >                                 
+                        </p:commandButton>
+                    </p:panelGrid>
+                </h:form>
+
+                <h:form id="form2">
+                    <p:growl id="msg_fomr1"/>                     
+                    <p:panelGrid columns="3">
+                        <p:outputLabel  for="cpfC" title="CPF" value="CPF :"/>   
+                        <p:inputMask   disabled="true"   required="true"   placeholder="Consulta pelo portal do servidor!"   id="cpfC"  readonly="true"     mask="999.999.999-99" 
+                                       value="#{permissaoUsuarioController.cpfServidor}" 
+                                       title="CPF do servidor!" /> 
+                        <p:commandButton  disabled="true"   icon="" title="Importar usuário!" actionListener="#{permissaoUsuarioController.abrirJDialogUsuario()}"  
+                                          process="@this" update="@none" class="iconebt pesquisar">     
+                            <p:ajax event="dialogReturn" listener="#{permissaoUsuarioController.usuarioJDialogSelecionado}" process="@this" update="form2 pnl1 cpfC" /> 
+                            <p:resetInput target="cpfC" /> 
+                        </p:commandButton>
+                    </p:panelGrid>
+                    <p:panelGrid columns="2">
+                        <p:outputLabel for="perfil" title="perfil" value="Perfil:   "/>                                 
+                        <p:selectOneMenu disabled="#{permissaoUsuarioController.permissaoUsuario.usuario == null ? true : false}" required="true" requiredMessage="Selecione um Perfil!" filter="true" filterMatchMode="contains" 
+                                         id="perfil" value="#{permissaoUsuarioController.perfil}" converter="#{perfilConverter}">
+                            <f:selectItem  noSelectionOption="true" itemLabel="Selecione um Perfil..."/>
+                            <f:selectItems   value="#{perfilController.listaPerfil}" var="perfilc" itemLabel="#{perfilc.descricao}"  itemValue="#{perfilc}" />    
+                        </p:selectOneMenu>   
+                        <p:outputLabel for="orgaoList" title="perfil" value="Órgão:   "/>                                 
+                        <p:selectOneMenu disabled="#{permissaoUsuarioController.permissaoUsuario.usuario == null ? true : false}" required="true" requiredMessage="Selecione um Órgão!" filter="true" filterMatchMode="contains" 
+                                         id="orgaoList" value="#{permissaoUsuarioController.orgao}" converter="#{orgaoConverter}" >
+                            <f:selectItem  noSelectionOption="true" itemLabel="Selecione um Órgão..."/>
+                            <f:selectItems   value="#{permissaoUsuarioController.listaOrgao}" var="orgaop" itemLabel="#{orgaop.id} - #{orgaop.nome}"  itemValue="#{orgaop}" />    
+                            <p:ajax event="change" listener="#{permissaoUsuarioController.vereficaListaPermissao}"  />
+                        </p:selectOneMenu>   
+                    </p:panelGrid> 
+                    <p:panel id="pnl1"> 
+                        <p:panelGrid    columns="4" class="lista" id="grid1" >                              
+                            <p:outputLabel for="nunFunc" title="Numero Func" value="N° Func:"/>                                 
+                            <h:outputText   id="nunFunc" value="#{permissaoUsuarioController.servidor.numfunc}"/>                            
+                            <p:outputLabel for="nunVinc" title="Numero Vinculo" value="N° Vinculo:"/>                                                         
+                            <h:outputText  id="nunVinc" value="#{permissaoUsuarioController.servidor.numvinc}"/>    
+
+                            <p:outputLabel for="cpf" title="CPF" value="CPF:"/>                                 
+                            <h:outputText   id="cpf"    value="#{permissaoUsuarioController.cpfConvertido(permissaoUsuarioController.servidor.cpf)}" 
+                                            title="CPF do servidor!" />
+                            <p:outputLabel for="nome" title="Nome" value="Nome:"/>                                 
+                            <h:outputText id="nome" value="#{permissaoUsuarioController.servidor.nome}"/>
+                            <p:outputLabel for="cargo" title="Cargo do servidor" value="Cargo:"/>                                 
+                            <h:outputText   id="cargo" value="#{permissaoUsuarioController.servidor.cargoNome}"/>    
+                            <p:outputLabel for="orgao" title="Orgao" value="Orgao:"/>                                 
+                            <h:outputText   id="orgao" value="#{permissaoUsuarioController.servidor.orgaoFantasia}"/>    
+
+                        </p:panelGrid>
+
+                        <p:separator/> 
+                        <p:commandButton icon="" id="btsalvar" disabled="#{permissaoUsuarioController.permissaoUsuario.usuario == null ? true : false}" update="form2 tbl1" value="Salvar" 
+                                         actionListener="#{permissaoUsuarioController.addPrivilegioUsuario()}" class="icone2 salvar">
+                            <p:confirm header="Confirmação" message="Deseja realmente salvar?"  icon="ui-icon-alert"   />
+                        </p:commandButton> 
+
+                        <p:commandButton icon="" disabled="#{permissaoUsuarioController.permissaoUsuario.usuario == null ? true : false}" update="form2 :form1"  id="btlimpar" immediate="true" value="Limpar"  
+                                         actionListener="#{permissaoUsuarioController.limparCampos()}" class="icone2 limpar"> 
+                        </p:commandButton>
+
+                        <p:separator/>
+                        <p:dataTable id="tbl1" var="permissoes" value="#{permissaoUsuarioController.listaPermissaoContemPermissao}"
+                                     emptyMessage="Não contém privilégio a nenhum Órgão."
+                                     paginatorAlwaysVisible="false"
+                                     editable="true">
+                            <p:ajax event="rowEdit" listener="#{permissaoUsuarioController.onEdit}" update="tbl1" />
+                            <p:ajax event="rowEditCancel" listener="#{permissaoUsuarioController.onCancel}" update="tbl1" />
+                            <f:facet name="header">
+                                Órgãos com Permissões
+                            </f:facet> 
+                            <p:column style="width:16px">
+                                <p:rowToggler />
+                            </p:column>
+                            <p:column headerText="Código">
+                                <h:outputText value="#{permissoes.id}" />
+                            </p:column> 
+                            <p:column headerText="Perfil">
+                                <h:outputText value="#{permissoes.perfil.descricao}" />
+                            </p:column>
+                            <p:column headerText="Órgão ">
+                                <h:outputText value="#{permissoes.lotadoOrgao}" />
+                            </p:column>
+                            <p:rowExpansion>
+                                <p:dataList var="usurioorgaoper"  value="#{permissoes.perfilUsuarioOrgaosAtivos}"> 
+                                    <p:panelGrid columns="2"  >
+                                        <h:outputText value="#{usurioorgaoper.orgao.nome}" />
+                                        <p:commandButton  disabled="#{(permissaoUsuario.perfil.id == 1 ) and (loginController.perfil.id != 1) }"  
+                                                          actionListener="#{permissaoUsuarioController.removerPerfilUsuarioOrgao(usurioorgaoper)}" icon="" ajax="true" update=":form2" immediate="true" class="iconebt lixeira">
+                                            <p:confirm header="Confirmação" message="Deseja realmente deletar o perfil?" /> 
+                                        </p:commandButton>
+
+                                    </p:panelGrid>
+
+                                </p:dataList>
+                            </p:rowExpansion>
+                            <!--<p:column headerText="#">  
+                                <p:commandButton  disabled="#{(permissoes.perfil.id == 1 ) and (loginController.perfil.id != 1) }"  actionListener="#{permissaoUsuarioController.removerPerfilUsuarioOrgao(permissoes)}" icon="" ajax="true" update=":form2" immediate="true" class="iconebt lixeira">
+                                    <p:confirm header="Confirmação" message="Deseja realmente deletar o perfil?" /> 
+                                </p:commandButton>
+
+                            </p:column>
+                            -->
+                        </p:dataTable>
+                    </p:panel>
+                    <p:commandButton  
+                        actionListener="#{permissaoUsuarioController.listarPermissaoPerfilOrgao()}" icon="" ajax="true" update=":form2" immediate="true" class="iconebt lixeira">
+                        <p:confirm header="Confirmação" message="Deseja realmente deletar o perfil?" /> 
+                    </p:commandButton>
+
+                </h:form> 
+
+                <p:confirmDialog global="true" showEffect="fade" >
+                    <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                    <p:commandButton  value="Não" ignoreAutoUpdate="true" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                </p:confirmDialog>
+            </p:panel>
+        </ui:define>
+    </ui:composition>
+</html>

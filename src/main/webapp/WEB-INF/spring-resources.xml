@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:security="http://www.springframework.org/schema/security"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+          http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+          http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd
+          http://www.springframework.org/schema/security
+          http://www.springframework.org/schema/security/spring-security.xsd
+">
+    <!--<security:debug />-->
+    <!--BANCO DE DADOS-->
+    <bean id="dataSourceAede" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <!-- <property name="url" value="jdbc:postgresql://10.121.0.9:5433/bcoproducao"/> -->
+        <property name="url" value="jdbc:postgresql://10.121.1.61:5433/bcoproducao"/> 
+        <property name="username" value="aede_user"/>
+        <property name="password" value="aede_user"/>
+        <property name="driverClassName" value="org.postgresql.Driver"/>
+
+    </bean>
+    <bean id="dataSourceErgon" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="url" value="jdbc:oracle:thin:@10.121.0.10:1521:producao"/>
+        <property name="username" value="c_dti"/>
+        <property name="password" value="c_dti123"/>
+        <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/>
+
+    </bean>
+    <!--PostProcessor-->
+    <bean id="jtaPersistenceUnitPostProcessor1" class="br.gov.to.secad.aede.util.JtaPersistenceUnitPostProcessor">
+        <property name="jtaDataSource" ref="dataSourceAede" />
+    </bean>
+    <bean id="jtaPersistenceUnitPostProcessor2" class="br.gov.to.secad.aede.util.JtaPersistenceUnitPostProcessor">
+        <property name="jtaDataSource" ref="dataSourceErgon" />
+    </bean>
+    <bean id="entityManagerFactoryAede" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="persistenceXmlLocation" value="classpath:META-INF/persistence.xml" />
+        <property name="persistenceUnitName" value="aedePU"/>
+        <property name="dataSource" ref="dataSourceAede" />
+        <property name="persistenceUnitPostProcessors">
+            <bean parent="jtaPersistenceUnitPostProcessor1"/>
+        </property>
+    </bean>
+    <!-- if no datasource is specified, use this one -->
+    <bean id="entityManagerFactoryErgon" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="persistenceXmlLocation" value="classpath:META-INF/persistence.xml" />
+        <property name="persistenceUnitName" value="ergonPU"/>
+        <property name="dataSource" ref="dataSourceErgon" />
+        <property name="persistenceUnitPostProcessors">
+            <bean parent="jtaPersistenceUnitPostProcessor2"/>
+        </property>
+    </bean>
+    <!-- Use a Md5 encoder since the user's passwords are stored as Md5 in the database -->
+ <bean class="org.springframework.security.authentication.encoding.Md5PasswordEncoder" id="passwordEncoder"/>
+
+    <!--Gerente de Transações do BD-->
+    <bean id="transactionManagerAede" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactoryAede" />
+    </bean>
+    <!---->
+    <bean id="transactionManagerErgon" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactoryErgon" />
+    </bean>
+    <!--Componentes da Aplicação: Classes e Serviços-->
+    <context:component-scan base-package="br.gov.to.secad" />
+    <!--Repositórios de Persistências(Spring-data-jpa)-->
+    <jpa:repositories base-package="br.gov.to.secad.aede.repository" entity-manager-factory-ref="entityManagerFactoryAede" transaction-manager-ref="transactionManagerAede"/>
+    <jpa:repositories base-package="br.gov.to.secad.ergon.repository" entity-manager-factory-ref="entityManagerFactoryErgon" transaction-manager-ref="transactionManagerErgon" />
+    
+
+    <!--SPRING SECURITY-->
+    <!--fluxo das páginas-->
+    <security:http  auto-config="true" use-expressions="true" >
+
+        <security:intercept-url pattern="/login.xhtml" access="permitAll"/>
+        <security:intercept-url pattern="/404.xhtml" access="permitAll" /> 
+        <security:intercept-url pattern="/escolhaPerfil.xhtml" access="permitAll" /> 
+         <security:intercept-url pattern="/index.xhtml" access="hasAnyRole('Comissão','Comissão de revisão','Servidor','Administrador', 'RH Setor','RH Orgao', 'Gestor Central', 'Desenvolvedor')"/>        
+        <security:intercept-url pattern="/admin/**" access="hasAnyRole('Desenvolvedor')"/>
+        <security:intercept-url pattern="/admin/cadastro/privusuario/**" access="hasAnyRole('Desenvolvedor','Administrador')"/>
+        <security:intercept-url pattern="/template/**" access="hasAnyRole('Servidor','Avaliador','Administrador', 'RH Setor','Gestor Orgao', 'Gestor Central', 'Desenvolvedor')"/>        
+         <security:intercept-url  pattern="/avaliacao/relatorios/servidor/**" access="hasAnyRole('Servidor','Desenvolvedor')"/>          
+         <security:intercept-url  pattern="/avaliacao/servicos/recurso/**" access="hasAnyRole('Comissão de revisão','Desenvolvedor')"/>          
+         <security:intercept-url  pattern="/avaliacao/servicos/tabular/**" access="hasAnyRole('Comissão','Desenvolvedor')"/>          
+         <security:intercept-url  pattern="/avaliacao/cadastro/comissao/**" access="hasAnyRole('Administrador','RH Setor','RH Orgao','Desenvolvedor')"/>          
+         <security:intercept-url  pattern="/avaliacao/cadastro/**" access="hasAnyRole('Administrador','Desenvolvedor')"/>          
+         <security:intercept-url  pattern="/avaliacao/**" access="hasRole('Desenvolvedor')"/>          
+          
+
+        
+        <!--
+        <security:intercept-url pattern="/admin/cadastro/privusuario*" access="hasAnyRole('Desenvolvedor','Servidor_EP')"/>
+        <security:intercept-url pattern="/avaliacao**" access="hasAnyRole('Desenvolvedor','Servidor_EP')"/>
+        
+        <security:intercept-url pattern="/admin/**" access="isAuthenticated()"/>
+
+
+<security:intercept-url pattern="/admin/**" access="isAuthenticated()"/>
+        <security:intercept-url pattern="/appfiles/**" access="isAuthenticated()"/>
+        <security:intercept-url pattern="/avaliacao/**" access="isAuthenticated()"/>
+        <security:intercept-url pattern="/desenvolvedores/**" access="isAuthenticated()"/>
+        <security:intercept-url pattern="/resources/**" access="isAuthenticated()"/>
+        <security:intercept-url pattern="/template/**" access="isAuthenticated()"/>
+        <security:intercept-url pattern="/testes/**" access="isAuthenticated()"/>
+        <security:intercept-url pattern="/404.xhtml" access="isAuthenticated()"/>
+        <security:intercept-url pattern="/index.xhtml" access="isAuthenticated()"/>
+        -->
+        
+        <security:form-login 
+            login-page="/login.xhtml"  
+            default-target-url="/index.xhtml" 
+            always-use-default-target="true"
+            authentication-failure-url="/semPermissao.xhtml" /> 
+        
+        <security:access-denied-handler  error-page="/semPermissao.xhtml" />
+        <!--gerenciador de sessão-->
+        <security:session-management invalid-session-url="/sessaoExpirada.xhtml" >
+            <!-- Permite o usuário logar apenas 1 vez no sistema com o mesmo LOGIN-->
+            <security:concurrency-control max-sessions="1" error-if-maximum-exceeded="true" />  
+        </security:session-management> 
+            
+        
+    </security:http>
+    <!--informações do BD-->
+    <security:authentication-manager  alias="authenticationManager">
+        <security:authentication-provider user-service-ref="usuarioService"  >
+            <security:password-encoder ref="passwordEncoder"/>
+        </security:authentication-provider>  
+    </security:authentication-manager>
+    <!--INFORMANDO EL PARA SECURITY NOS MÉTODOS-->
+    <security:global-method-security pre-post-annotations="enabled"/>
+    <!--Informações para geração de relatório JASPERREPORTS
+    <import resource="ireport-view.xml" />
+    <bean id="pdfResolver" class="org.springframework.web.servlet.view.XmlViewResolver">
+        <property name="location" value="classpath:ireport-view.xml" />
+        <property name="order" value="0" />
+    </bean>-->
+</beans>
